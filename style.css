@@ -14,11 +14,11 @@
 #equals {
     background-color: orange;
 }
-.numbers {
+.number {
     background-color: white;
 }
-.operators {
-    background-color: beige;
+.operator {
+    background-color: darkgray;
 }
 button {
     font-family: 'Bahnschrift', 'Gill Sans', 'Helvetica', sans-serif;
