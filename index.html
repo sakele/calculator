@@ -12,6 +12,17 @@
         let subtract = (a, b) => a - b;
         let multiply = (a, b) => a * b;
         let divide = (a, b) => a / b;
+
+        let firstNum, secondNum, operator;
+
+        function operate(a, b, op) {
+            let operator;
+            if (op === '+') {operator = add}
+            if (op === '-') {operator = subtract}
+            if (op === '*') {operator = multiply}
+            if (op === '/') {operator = divide}
+            return operator(a, b);
+        }
     </script>
 </body>
 </html>
