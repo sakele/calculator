@@ -8,9 +8,9 @@
 </head>
 <body>
     <div class ="casing">
-        <div class="banner"></div>
+        <div class="banner">calcutron</div>
         <div class ="display">
-            0123456789+-X/
+            0123456789+-x
         </div>
         <div class ="keys">
             <div class="row">
@@ -48,7 +48,13 @@
         let add = (a, b) => a + b;
         let subtract = (a, b) => a - b;
         let multiply = (a, b) => a * b;
-        let divide = (a, b) => a / b;
+        let divide = function(a, b) {
+            if (b === 0) {
+                return 'Illegal!'
+            } else {
+                return a / b;
+            }
+        };
 
         let firstNum, secondNum, operator;
 
@@ -59,6 +65,10 @@
             if (op === '*') {operator = multiply}
             if (op === '/') {operator = divide}
             return operator(a, b);
+        }
+
+        function updateDisplay() {
+
         }
     </script>
 </body>
