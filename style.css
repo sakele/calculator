@@ -2,6 +2,7 @@
 .display {
     font-family: 'Seven Segment', monospace, sans-serif;
     background-color: #8F9779;
+    text-align: right;
 }
 .casing {
     background-color: #36454f;
@@ -25,7 +26,7 @@
 .number {
     background-color: white;
 }
-.operator {
+.operator, .special {
     background-color: darkgray;
 }
 button {

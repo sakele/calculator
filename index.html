@@ -9,14 +9,13 @@
 <body>
     <div class ="casing">
         <div class="banner">calcutron</div>
-        <div class ="display">
-            0123456789+-x
-        </div>
+        <div class ="display">0</div>
         <div class ="keys">
             <div class="row">
-                <button class="clear">CE</button>
-                <button class="clear">C</button>
-                <button class="operator" id="negative">&pm;</button>
+                <button class="special" id="backspace">&rarr;</button>
+                <button class="clear" id="cancel-entry">CE</button>
+                <button class="clear" id="clear">C</button>
+                <button class="special" id="negative">&pm;</button>
                 <button class="operator" id="divide">&div;</button>
             </div>
             <div class="row">
@@ -57,19 +56,92 @@
         };
 
         let firstNum, secondNum, operator;
+        let displayVal = '0';
+        let priorVal;
+
+        const display = document.querySelector('.display');
+        const buttons = document.querySelectorAll('button');
 
         function operate(a, b, op) {
             let operator;
-            if (op === '+') {operator = add}
-            if (op === '-') {operator = subtract}
-            if (op === '*') {operator = multiply}
-            if (op === '/') {operator = divide}
+            if (op === 'plus') {operator = add}
+            if (op === 'minus') {operator = subtract}
+            if (op === 'times') {operator = multiply}
+            if (op === 'divide') {operator = divide}
             return operator(a, b);
         }
 
         function updateDisplay() {
-
+            if (this.id === "clear") {
+                displayVal = '0';
+                priorVal = null;
+            } else if (this.id === "cancel-entry") {
+                cancelEntry();
+                if (typeof priorVal === 'number') {
+                    displayVal = priorVal
+                    priorVal = null;
+                } else {
+                    displayVal = '0';
+                }
+            } else if (this.id === "backspace") {
+                if (displayVal !== '0' && displayVal.length > 1) {
+                    displayVal = displayVal.slice(0, displayVal.length-1);
+                } else {displayVal = '0';}
+            } else if (this.id === "negative") {
+                if (+displayVal !== 0 && !displayVal.includes("-")) {
+                    displayVal = "-" + displayVal;
+                } else if (displayVal.includes("-")) {
+                    displayVal = displayVal.slice(1);
+                }
+            } else if (this.className === "number") {
+                if ((displayVal.length === 12 && !displayVal.includes(".") && !displayVal.includes("-")) || 
+                    (displayVal.length === 14 && displayVal.includes(".") && !displayVal.includes("-")) || 
+                    (displayVal.length === 13 && (displayVal.includes(".") || displayVal.includes("-")))) {
+                    return;
+                } else if (this.id === "decimal" && displayVal.includes(".")) { 
+                    return;
+                } else if (this.id === "decimal") {
+                    displayVal += this.textContent;
+                } else if (+displayVal === 0 && !displayVal.includes(".")) {
+                    displayVal = this.textContent;
+                } else {
+                    displayVal += this.textContent;
+                }
+            } else {
+                calculate(this);
+            }
+            display.textContent = displayVal;
         }
+        function calculate(button) {
+            if (button.className === "operator") {
+                operator = button.id;
+                if (typeof firstNum !== 'number') {
+                    firstNum = +displayVal;
+                } else if (typeof secondNum !== 'number') {
+                    secondNum = +displayVal;
+                }
+            }
+            if (typeof firstNum === 'number' && typeof secondNum === 'number') {
+                let result = operate(firstNum, secondNum, operator)
+                firstNum = result;
+                secondNum = null;
+                operator = null;
+                displayVal = result.toString();
+            }
+        }
+        function cancelEntry() {
+            if (typeof secondNum === 'number') {
+                secondNum = null;
+            } else if (operator) {
+                operator = null;
+            } else if (typeof firstNum === 'number') {
+                firstNum = null;
+            }
+        }
+        buttons.forEach((button) => {
+                button.addEventListener('mousedown', updateDisplay)
+        })
+        
     </script>
 </body>
 </html>
