@@ -38,7 +38,7 @@
             </div>
             <div class="row">
                 <button class="number" id="zero">0</button>
-                <button class="number" id="decimal">.</button>
+                <button id="decimal">.</button>
                 <button id="equals">=</button>
             </div>
         </div>
@@ -60,7 +60,14 @@
         let priorVal;
 
         const display = document.querySelector('.display');
-        const buttons = document.querySelectorAll('button');
+        const numberButtons = document.querySelectorAll('.number');
+        const operatorButtons = document.querySelectorAll('.operator');
+        const decimalButton = document.getElementById('decimal');
+        const backspaceButton = document.getElementById('backspace');
+        const cancelEntryButton = document.getElementById('cancel-entry');
+        const clearButton = document.getElementById('clear');
+        const negativeButton = document.getElementById('negative');
+        const equalsButton = document.getElementById('equals');
 
         function operate(a, b, op) {
             let operator;
@@ -72,64 +79,10 @@
         }
 
         function updateDisplay() {
-            if (this.id === "clear") {
-                displayVal = '0';
-                priorVal = null;
-            } else if (this.id === "cancel-entry") {
-                cancelEntry();
-                if (typeof priorVal === 'number') {
-                    displayVal = priorVal
-                    priorVal = null;
-                } else {
-                    displayVal = '0';
-                }
-            } else if (this.id === "backspace") {
-                if (displayVal !== '0' && displayVal.length > 1) {
-                    displayVal = displayVal.slice(0, displayVal.length-1);
-                } else {displayVal = '0';}
-            } else if (this.id === "negative") {
-                if (+displayVal !== 0 && !displayVal.includes("-")) {
-                    displayVal = "-" + displayVal;
-                } else if (displayVal.includes("-")) {
-                    displayVal = displayVal.slice(1);
-                }
-            } else if (this.className === "number") {
-                if ((displayVal.length === 12 && !displayVal.includes(".") && !displayVal.includes("-")) || 
-                    (displayVal.length === 14 && displayVal.includes(".") && !displayVal.includes("-")) || 
-                    (displayVal.length === 13 && (displayVal.includes(".") || displayVal.includes("-")))) {
-                    return;
-                } else if (this.id === "decimal" && displayVal.includes(".")) { 
-                    return;
-                } else if (this.id === "decimal") {
-                    displayVal += this.textContent;
-                } else if (+displayVal === 0 && !displayVal.includes(".")) {
-                    displayVal = this.textContent;
-                } else {
-                    displayVal += this.textContent;
-                }
-            } else {
-                calculate(this);
-            }
             display.textContent = displayVal;
         }
-        function calculate(button) {
-            if (button.className === "operator") {
-                operator = button.id;
-                if (typeof firstNum !== 'number') {
-                    firstNum = +displayVal;
-                } else if (typeof secondNum !== 'number') {
-                    secondNum = +displayVal;
-                }
-            }
-            if (typeof firstNum === 'number' && typeof secondNum === 'number') {
-                let result = operate(firstNum, secondNum, operator)
-                firstNum = result;
-                secondNum = null;
-                operator = null;
-                displayVal = result.toString();
-            }
-        }
         function cancelEntry() {
+            // Only cancel the latest entry
             if (typeof secondNum === 'number') {
                 secondNum = null;
             } else if (operator) {
@@ -137,10 +90,94 @@
             } else if (typeof firstNum === 'number') {
                 firstNum = null;
             }
+            if (typeof priorVal === 'number') {
+                displayVal = priorVal
+                priorVal = null;
+            } else {
+                displayVal = '0';
+            }
+            updateDisplay();
         }
-        buttons.forEach((button) => {
-                button.addEventListener('mousedown', updateDisplay)
+        function clearFunction() {
+            displayVal = '0';
+            priorVal = null;
+            firstNum = null;
+            secondNum = null;
+            operator = null;
+            updateDisplay();
+        }
+        function backspaceFunction() {
+            if (displayVal.length === 1 || (displayVal.length === 2 && displayVal.includes("-"))) {
+                displayVal = '0';
+            } else if (displayVal !== '0' && displayVal.length > 1) {
+                displayVal = displayVal.slice(0, displayVal.length-1);
+            }
+            updateDisplay();
+        }
+        function makeNegative() {
+            if (+displayVal !== 0 && !displayVal.includes("-")) {
+                displayVal = "-" + displayVal;
+            } else if (displayVal.includes("-")) {
+                displayVal = displayVal.slice(1);
+            }
+            updateDisplay();
+        }
+        function equalsFunction() {
+            if (operator && typeof firstNum === 'number' && typeof secondNum === 'number') {
+                priorVal = displayVal;
+                displayVal = operate(firstNum, secondNum, operator).toString();
+                updateDisplay();
+            }
+        }
+        function operatorFunction() {
+            if (typeof firstNum !== 'number') {
+                firstNum = +displayVal;
+                operator = this.id;
+            } else if (operator && typeof secondNum !== 'number') {
+                equalsFunction();
+                operator = this.id;
+            }
+        }
+        function enterNumber() {
+            if ((displayVal.length === 12 && !displayVal.includes(".") && !displayVal.includes("-")) || 
+                (displayVal.length === 14 && displayVal.includes(".") && !displayVal.includes("-")) || 
+                (displayVal.length === 13 && (displayVal.includes(".") || displayVal.includes("-")))) {
+                return;
+            } else if (operator) {
+                displayVal = this.textContent;
+            } else if (+displayVal === 0 && !displayVal.includes(".")) {
+                displayVal = this.textContent;
+            } else {
+                displayVal += this.textContent;
+            }
+            updateDisplay();
+        }
+        function enterDecimal() {
+            if ((displayVal.length === 12 && !displayVal.includes(".") && !displayVal.includes("-")) || 
+                (displayVal.length === 14 && displayVal.includes(".") && !displayVal.includes("-")) || 
+                (displayVal.length === 13 && (displayVal.includes(".") || displayVal.includes("-")))) {
+                return;
+            } else if (displayVal.includes(".")) { 
+                return;
+            } else if (operator) {
+                displayVal = '0' + this.textContent;
+            } else {
+                displayVal += this.textContent;
+            }
+            updateDisplay();
+        }
+        numberButtons.forEach((button) => {
+            button.addEventListener('mousedown', enterNumber);
         })
+        operatorButtons.forEach((button) => {
+            button.addEventListener('mousedown', operatorFunction);
+        })
+        decimalButton.addEventListener('mousedown', enterDecimal);
+        backspaceButton.addEventListener('mousedown', backspaceFunction);
+        cancelEntryButton.addEventListener('mousedown', cancelEntry);
+        clearButton.addEventListener('mousedown', clearFunction);
+        negativeButton.addEventListener('mousedown', makeNegative);
+        equalsButton.addEventListener('mousedown', equalsFunction);
         
     </script>
 </body>

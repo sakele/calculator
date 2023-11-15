@@ -23,7 +23,7 @@
 #equals {
     background-color: orange;
 }
-.number {
+.number, #decimal {
     background-color: white;
 }
 .operator, .special {
