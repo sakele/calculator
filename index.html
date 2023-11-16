@@ -57,7 +57,8 @@
 
         let firstNum, secondNum, operator;
         let displayVal = '0';
-        let priorVal;
+        let calcReady = false;
+        let newDisplay = false;
 
         const display = document.querySelector('.display');
         const numberButtons = document.querySelectorAll('.number');
@@ -100,13 +101,16 @@
         }
         function clearFunction() {
             displayVal = '0';
-            priorVal = null;
             firstNum = null;
             secondNum = null;
             operator = null;
+            calcReady = false;
             updateDisplay();
         }
         function backspaceFunction() {
+            if (isNaN(+displayVal)) {
+                return;
+            }
             if (displayVal.length === 1 || (displayVal.length === 2 && displayVal.includes("-"))) {
                 displayVal = '0';
             } else if (displayVal !== '0' && displayVal.length > 1) {
@@ -115,7 +119,10 @@
             updateDisplay();
         }
         function makeNegative() {
-            if (+displayVal !== 0 && !displayVal.includes("-")) {
+            if (isNaN(+displayVal)) {
+                return;
+            }
+            if (+displayVal !== 0 && !(displayVal.includes("-"))) {
                 displayVal = "-" + displayVal;
             } else if (displayVal.includes("-")) {
                 displayVal = displayVal.slice(1);
@@ -123,19 +130,36 @@
             updateDisplay();
         }
         function equalsFunction() {
-            if (operator && typeof firstNum === 'number' && typeof secondNum === 'number') {
-                priorVal = displayVal;
+            if (calcReady) {
+                secondNum = +displayVal;
                 displayVal = operate(firstNum, secondNum, operator).toString();
+                firstNum = null;
+                secondNum = null;
+                operator = null;
+                calcReady = false;
                 updateDisplay();
             }
+            newDisplay = true;
+            firsNum = null;
+            secondNum = null;
+            operator = null;
         }
         function operatorFunction() {
+            if (isNaN(+displayVal)) {
+                return;
+            }
             if (typeof firstNum !== 'number') {
                 firstNum = +displayVal;
                 operator = this.id;
-            } else if (operator && typeof secondNum !== 'number') {
+                newDisplay = true;
+            } else if (operator) {
                 equalsFunction();
+                firstNum = +displayVal;
                 operator = this.id;
+            } else {
+                firstNum = +displayVal;
+                operator = this.id;
+                calcReady = true;
             }
         }
         function enterNumber() {
@@ -143,12 +167,16 @@
                 (displayVal.length === 14 && displayVal.includes(".") && !displayVal.includes("-")) || 
                 (displayVal.length === 13 && (displayVal.includes(".") || displayVal.includes("-")))) {
                 return;
-            } else if (operator) {
+            } else if (newDisplay) {
                 displayVal = this.textContent;
+                newDisplay = false;
             } else if (+displayVal === 0 && !displayVal.includes(".")) {
                 displayVal = this.textContent;
             } else {
                 displayVal += this.textContent;
+            }
+            if (operator) {
+                calcReady = true;
             }
             updateDisplay();
         }
@@ -159,10 +187,14 @@
                 return;
             } else if (displayVal.includes(".")) { 
                 return;
-            } else if (operator) {
+            } else if (newDisplay) {
                 displayVal = '0' + this.textContent;
+                newDisplay = false;
             } else {
                 displayVal += this.textContent;
+            }
+            if (operator) {
+                calcReady = true;
             }
             updateDisplay();
         }
