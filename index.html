@@ -84,19 +84,7 @@
         }
         function cancelEntry() {
             // Only cancel the latest entry
-            if (typeof secondNum === 'number') {
-                secondNum = null;
-            } else if (operator) {
-                operator = null;
-            } else if (typeof firstNum === 'number') {
-                firstNum = null;
-            }
-            if (typeof priorVal === 'number') {
-                displayVal = priorVal
-                priorVal = null;
-            } else {
-                displayVal = '0';
-            }
+            displayVal = '0';
             updateDisplay();
         }
         function clearFunction() {
