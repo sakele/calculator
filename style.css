@@ -24,6 +24,7 @@ body {
     flex-direction: column;
     border-radius: 16px;
     min-height: 700px;
+    border: 6px #29343c outset;
 }
 .banner {
     font-family: 'Magenta', Arial, Helvetica, sans-serif;
@@ -34,24 +35,41 @@ body {
 .clear {
     color: white;
     background-color: #007FFF;
+    width: 80px;
+    height: 60px;
+    border-color: #005ebc;
 }
 
 #equals {
     background-color: orange;
     flex-grow: 2;
+    width: 160px;
+    height: 80px;
+    border-color: rgb(178, 116, 0);
+    margin-left: 30px;
 }
 .number, #decimal {
     background-color: white;
+    width: 80px;
+    height: 80px;
+    border-color: rgb(196, 196, 196);
 }
 .operator, .special {
     background-color: darkgray;
+    width: 80px;
+    height: 80px;
+    border-color: rgb(125, 125, 125);
 }
 button {
     font-family: 'Gill Sans', 'Helvetica', sans-serif;
     font-size: xx-large;
     text-align: center;
-    border: none;
-    border-radius: 4px;
+    border-radius: 6px;
+    /* border: 3px;
+    border-style: outset;
+    box-sizing: border-box; */
+    margin: 10px;
+    padding: 0px;
 }
 
 .keys {
@@ -63,12 +81,18 @@ button {
 .row {
     display: flex;
     flex-grow: 1;
+    height: 100px;
+    align-items: center;
     
 }
 #btn0 {
-    flex-grow: 2;
+    width: 160px;
+    margin-right: 30px;
 }
-
-#decimal {
-    flex-grow: 1;
+#backspace, #negative {
+    height: 60px;
+}
+#times, #plus, #minus {
+    width: 160px;
+    margin-left: 30px;
 }
