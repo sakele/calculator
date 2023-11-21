@@ -1,19 +1,35 @@
 @import url('https://fonts.cdnfonts.com/css/seven-segment');
+@font-face {
+    font-family: 'Magenta';
+    src: url(fonts/Magenta_BBT.ttf) format('truetype');
+}
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .display {
     font-family: 'Seven Segment', monospace, sans-serif;
+    font-size: 80px;
     background-color: #8F9779;
     text-align: right;
+    min-width: 530px;
+    padding: 10px;
+    margin: 0 30px 20px;
+    border-radius: 4px;
 }
 .casing {
     background-color: #36454f;
     display: flex;
     flex-direction: column;
+    border-radius: 16px;
+    min-height: 700px;
 }
 .banner {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    font-style: oblique;
+    font-family: 'Magenta', Arial, Helvetica, sans-serif;
+    font-size: 40px;
     color: white;
+    margin: 0px 30px 0px;
 }
 .clear {
     color: white;
@@ -22,6 +38,7 @@
 
 #equals {
     background-color: orange;
+    flex-grow: 2;
 }
 .number, #decimal {
     background-color: white;
@@ -31,12 +48,27 @@
 }
 button {
     font-family: 'Gill Sans', 'Helvetica', sans-serif;
+    font-size: xx-large;
+    text-align: center;
+    border: none;
+    border-radius: 4px;
 }
 
 .keys {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
-/* .row {
-    /display: flex;
-} */
+.row {
+    display: flex;
+    flex-grow: 1;
+    
+}
+#btn0 {
+    flex-grow: 2;
+}
+
+#decimal {
+    flex-grow: 1;
+}
