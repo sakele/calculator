@@ -151,9 +151,12 @@
             }
         }
         function enterNumber() {
-            if ((displayVal.length === 12 && !displayVal.includes(".") && !displayVal.includes("-")) || 
+            if (operator) {
+                calcReady = true;
+            }
+            if (((displayVal.length === 12 && !displayVal.includes(".") && !displayVal.includes("-")) || 
                 (displayVal.length === 14 && displayVal.includes(".") && !displayVal.includes("-")) || 
-                (displayVal.length === 13 && (displayVal.includes(".") || displayVal.includes("-")))) {
+                (displayVal.length === 13 && (displayVal.includes(".") || displayVal.includes("-")))) && !calcReady) {
                 return;
             } else if (newDisplay) {
                 displayVal = this.textContent;
@@ -162,9 +165,6 @@
                 displayVal = this.textContent;
             } else {
                 displayVal += this.textContent;
-            }
-            if (operator) {
-                calcReady = true;
             }
             updateDisplay();
         }
